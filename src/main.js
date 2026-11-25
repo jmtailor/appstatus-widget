@@ -55,7 +55,9 @@ async function refresh() {
   state.busy = true; push();
   try {
     const snap = readJson(fp('snapshot.json'), null);
-    const r = await collect(apps, settings, snap);
+    const store = readJson(fp('repocache.json'), { repos: {} });
+    const r = await collect(apps, settings, snap, store);
+    writeJson(fp('repocache.json'), store);
     state.apps = r.apps; state.collectedAt = r.collectedAt;
     const log = r.baseline ? [] : readJson(fp('changes.json'), []);
     state.changes = [...r.newChanges, ...log].slice(0, 12);

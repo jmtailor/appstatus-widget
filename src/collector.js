@@ -23,16 +23,27 @@ function scanFolder(dir, depth = 0, acc = { files: 0, newest: 0, recent: '', nam
   return acc;
 }
 
+const etags = new Map();
+const GH_TTL = 9 * 60 * 1000;
+
 async function gh(url, token) {
   const headers = { 'User-Agent': 'appstatus-widget', Accept: 'application/vnd.github+json' };
   if (token) headers.Authorization = 'Bearer ' + token;
+  const prev = etags.get(url);
+  if (prev) headers['If-None-Match'] = prev.etag;
   const r = await fetch(url, { headers });
+  if (r.status === 304 && prev) return prev.body;
   if (r.status === 404) return null;
-  if (!r.ok) throw new Error('GitHub ' + r.status);
-  return r.json();
+  if (!r.ok) throw new Error('GitHub ' + r.status + (r.status === 403 ? ' (요청 한도, 잠시 후 자동 복구)' : ''));
+  const body = await r.json();
+  const et = r.headers.get('etag');
+  if (et) etags.set(url, { etag: et, body });
+  return body;
 }
 
-async function scanRepo(repo, token) {
+async function scanRepo(repo, token, store) {
+  const cached = store.repos[repo];
+  if (cached && Date.now() - cached.at < GH_TTL) return cached.data;
   const out = { pushedAt: 0, release: '', releaseAt: 0, error: '' };
   try {
     const info = await gh(`https://api.github.com/repos/${repo}`, token);
@@ -41,6 +52,8 @@ async function scanRepo(repo, token) {
     const rel = await gh(`https://api.github.com/repos/${repo}/releases/latest`, token);
     if (rel) { out.release = rel.tag_name; out.releaseAt = Date.parse(rel.published_at) || 0; }
   } catch (e) { out.error = String(e.message || e); }
+  if (out.error && cached) return { ...cached.data, error: out.error + ' · 이전 값 표시' };
+  if (!out.error) store.repos[repo] = { at: Date.now(), data: out };
   return out;
 }
 
@@ -52,7 +65,9 @@ function guessStatus(ev) {
   return null;
 }
 
-async function collect(apps, settings, prevSnapshot) {
+async function collect(apps, settings, prevSnapshot, store) {
+  store = store || { repos: {} };
+  store.repos = store.repos || {};
   const root = settings.driveRoot;
   const result = [];
   for (const a of apps) {
@@ -65,7 +80,7 @@ async function collect(apps, settings, prevSnapshot) {
         Object.assign(ev, { files: s.files, newest: s.newest, recent: s.recent, names: s.names });
       }
     }
-    if (a.repo) ev.repo = await scanRepo(a.repo, settings.githubToken);
+    if (a.repo) ev.repo = await scanRepo(a.repo, settings.githubToken, store);
     const last = Math.max(ev.newest, ev.repo ? Math.max(ev.repo.pushedAt, ev.repo.releaseAt) : 0);
     result.push({
       ...a,
