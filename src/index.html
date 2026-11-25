@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; script-src 'self'">
+<title>앱 개발 현황</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<div id="shell">
+  <header>
+    <div class="drag"><b>앱 개발 현황</b><span id="live" class="live"></span><span id="at" class="sub"></span></div>
+    <div class="btns"><button id="bRef" title="새로고침">⟳</button><button id="bSet" title="설정">⚙</button><button id="bHide" title="숨기기">✕</button></div>
+  </header>
+  <main>
+    <section id="left"><div class="h">다음 단계</div><div id="tiles"></div></section>
+    <section id="right">
+      <div class="top"><svg id="donut" width="130" height="130" viewBox="0 0 180 180"></svg><div id="legend"></div></div>
+      <div class="box"><div class="h">변화 기록</div><ul id="chg"></ul></div>
+    </section>
+  </main>
+  <div id="panel" hidden>
+    <h3>설정</h3>
+    <label>투명도 <output id="opv"></output><input id="op" type="range" min="20" max="100" step="1"></label>
+    <label>표시 위치<select id="corner"><option value="top-right">우측 상단</option><option value="bottom-right">우측 하단</option><option value="top-left">좌측 상단</option><option value="bottom-left">좌측 하단</option></select></label>
+    <label>Create APP 폴더(Drive 동기화 경로)<div class="row"><input id="root" type="text" placeholder="G:\내 드라이브\Create APP"><button id="pick">찾기</button></div></label>
+    <label>GitHub 토큰(선택, 비공개 저장소용)<input id="tok" type="password" placeholder="읽기 전용 토큰"></label>
+    <label>자동 갱신 주기(분)<input id="iv" type="number" min="2" max="120"></label>
+    <label class="ck"><input id="top" type="checkbox"> 항상 위에 표시</label>
+    <label class="ck"><input id="auto" type="checkbox"> Windows 시작 시 실행</label>
+    <div class="row"><button id="apps">앱 목록 파일 열기</button><button id="reload">목록 다시 읽기</button><button id="close">닫기</button></div>
+  </div>
+</div>
+<script src="renderer.js"></script></body></html>

@@ -1,0 +1,23 @@
+{
+  "name": "appstatus-widget",
+  "productName": "AppStatusWidget",
+  "version": "0.1.0",
+  "description": "앱 개발 현황 데스크톱 위젯",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win --publish never",
+    "release": "electron-builder --win --publish always"
+  },
+  "build": {
+    "appId": "com.jmtailor.appstatuswidget",
+    "productName": "AppStatusWidget",
+    "files": ["src/**", "assets/**", "package.json"],
+    "win": { "target": ["nsis", "portable"], "icon": "assets/icon.png" },
+    "nsis": { "oneClick": true, "perMachine": false }
+  },
+  "devDependencies": {
+    "electron": "^45.5.0",
+    "electron-builder": "^26.18.0"
+  }
+}

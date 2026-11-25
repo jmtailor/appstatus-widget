@@ -1,0 +1,27 @@
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:transparent;overflow:hidden}
+body{font:12px/1.45 "Malgun Gothic","Segoe UI",sans-serif;color:#e6edf3;user-select:none}
+#shell{position:relative;height:100%;background:#11161cf2;border:1px solid #2a3541;border-radius:14px;display:flex;flex-direction:column;overflow:hidden}
+header{display:flex;justify-content:space-between;align-items:center;padding:8px 10px 6px 14px}
+.drag{-webkit-app-region:drag;flex:1;display:flex;align-items:center;gap:8px}
+.btns{display:flex;gap:2px;-webkit-app-region:no-drag}
+button{background:#1a222b;color:#c3ccd5;border:1px solid #2a3541;border-radius:6px;padding:3px 8px;cursor:pointer;font:inherit}
+button:hover{background:#243040}
+.sub{color:#8b98a5;font-size:11px}.live{width:7px;height:7px;border-radius:50%;background:#3fb950}.live.busy{background:#e3b341}
+main{flex:1;display:grid;grid-template-columns:1.25fr 1fr;gap:12px;padding:0 12px 12px;min-height:0}
+section{min-height:0;display:flex;flex-direction:column}
+.h{font-size:11px;color:#8b98a5;margin-bottom:6px}
+#tiles{display:grid;grid-template-columns:1fr 1fr;gap:6px;overflow-y:auto;align-content:start;padding-right:2px}
+.tile{background:#1a222b;border-radius:8px;padding:7px 9px;border-left:3px solid var(--c);cursor:default}
+.tile.dim{opacity:.25}.tile b{display:block;font-weight:600}.tile .nx{color:#9fb3c8;font-size:11px}.tile .dt{color:#6f7d8b;font-size:10px;margin-top:2px}
+.tile .hint{color:#e3b341;font-size:10px}
+.top{display:flex;align-items:center;gap:10px}
+#legend div{display:flex;align-items:center;gap:6px;margin:3px 0;cursor:pointer}
+#legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.box{background:#1a222b;border-radius:8px;padding:8px 10px;margin-top:8px;flex:1;min-height:0;overflow-y:auto}
+.box ul{margin:0;padding-left:14px;color:#c3ccd5}.box li{margin-bottom:3px}
+#panel{position:absolute;inset:40px 12px 12px auto;width:300px;background:#151b22;border:1px solid #2a3541;border-radius:10px;padding:10px 12px;overflow-y:auto;box-shadow:0 6px 24px #0008}
+#panel[hidden]{display:none}#panel h3{margin:0 0 8px;font-size:13px}
+#panel label{display:block;margin-bottom:8px;color:#9fb3c8;font-size:11px}
+#panel input[type=text],#panel input[type=password],#panel input[type=number],#panel select{width:100%;background:#0e1318;color:#e6edf3;border:1px solid #2a3541;border-radius:6px;padding:4px 6px;margin-top:3px;font:inherit}
+#panel input[type=range]{width:100%}.ck{display:flex;gap:6px;align-items:center}.row{display:flex;gap:6px}.row input{flex:1}
+output{float:right;color:#e6edf3}
