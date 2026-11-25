@@ -7,7 +7,7 @@ if (!app.requestSingleInstanceLock()) app.quit();
 
 const DEFAULTS = {
   corner: 'top-right', opacity: 0.92, alwaysOnTop: true, clickThrough: false,
-  driveRoot: '', githubToken: '', autostart: false, intervalMin: 10, width: 700, height: 440, collapsed: false,
+  driveRoot: '', githubToken: '', autostart: false, intervalMin: 10, width: 700, height: 440, collapsed: false, startCollapsed: true,
 };
 const userDir = () => app.getPath('userData');
 const fp = (n) => path.join(userDir(), n);
@@ -57,7 +57,7 @@ async function refresh() {
     const snap = readJson(fp('snapshot.json'), null);
     const r = await collect(apps, settings, snap);
     state.apps = r.apps; state.collectedAt = r.collectedAt;
-    const log = readJson(fp('changes.json'), []);
+    const log = r.baseline ? [] : readJson(fp('changes.json'), []);
     state.changes = [...r.newChanges, ...log].slice(0, 12);
     writeJson(fp('changes.json'), state.changes);
     writeJson(fp('snapshot.json'), r.snapshot);
@@ -126,6 +126,7 @@ app.whenReady().then(() => {
   }
   writeJson(fp('apps.json'), apps);
   if (!settings.autostartInit) { settings.autostart = true; settings.autostartInit = true; }
+  if (settings.startCollapsed) settings.collapsed = true;
   writeJson(fp('settings.json'), settings);
 
   tray = new Tray(nativeImage.createFromPath(path.join(__dirname, '..', 'assets', 'tray.png')));

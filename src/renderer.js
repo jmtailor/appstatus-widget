@@ -58,7 +58,7 @@ function render() {
   const mini = $('mini'); mini.textContent = '';
   order.forEach((k) => { const i = el('i'); i.style.background = C[k]; mini.appendChild(i); mini.appendChild(document.createTextNode(String(cnt[k]))); });
   if (document.activeElement !== $('op')) { $('op').value = Math.round(st.opacity * 100); $('opv').textContent = Math.round(st.opacity * 100) + '%'; }
-  $('corner').value = st.corner; $('top').checked = !!st.alwaysOnTop; $('auto').checked = !!st.autostart;
+  $('corner').value = st.corner; $('top').checked = !!st.alwaysOnTop; $('auto').checked = !!st.autostart; $('sc').checked = !!st.startCollapsed;
   if (document.activeElement !== $('root')) $('root').value = st.driveRoot || '';
   if (document.activeElement !== $('iv')) $('iv').value = st.intervalMin;
 }
@@ -71,6 +71,7 @@ $('close').onclick = () => { $('panel').hidden = true; };
 $('op').oninput = (e) => { $('opv').textContent = e.target.value + '%'; api.setSettings({ opacity: e.target.value / 100 }); };
 $('corner').onchange = (e) => api.setSettings({ corner: e.target.value });
 $('top').onchange = (e) => api.setSettings({ alwaysOnTop: e.target.checked });
+$('sc').onchange = (e) => api.setSettings({ startCollapsed: e.target.checked });
 $('auto').onchange = (e) => api.setSettings({ autostart: e.target.checked });
 $('root').onchange = (e) => api.setSettings({ driveRoot: e.target.value.trim() });
 $('iv').onchange = (e) => api.setSettings({ intervalMin: Number(e.target.value) || 10 });

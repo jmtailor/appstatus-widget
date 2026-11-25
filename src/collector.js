@@ -70,26 +70,31 @@ async function collect(apps, settings, prevSnapshot) {
     result.push({
       ...a,
       lastActivity: last ? new Date(last).toISOString() : (a.lastActivity || ''),
-      evidence: { files: ev.files, recent: ev.recent, folderFound: ev.folderFound,
-        release: ev.repo ? ev.repo.release : '', pushedAt: ev.repo ? ev.repo.pushedAt : 0,
+      evidence: { files: ev.files, recent: ev.recent, folderFound: ev.folderFound, drive: ev.newest,
+        release: ev.repo ? ev.repo.release : '', pushedAt: ev.repo ? ev.repo.pushedAt : 0, releaseAt: ev.repo ? ev.repo.releaseAt : 0,
         error: ev.repo ? ev.repo.error : '' },
       suggest: guessStatus(ev),
     });
   }
-  const prev = (prevSnapshot && prevSnapshot.apps) || {};
+  const prev = prevSnapshot && prevSnapshot.v === 2 ? prevSnapshot.apps : null;
   const changes = [];
   const now = Date.now();
-  for (const r of result) {
-    const p = prev[r.id];
-    if (!p) continue;
-    if (p.status !== r.status) changes.push({ at: now, text: `${r.name}: 상태 ${p.status} → ${r.status}` });
-    if (r.lastActivity && p.lastActivity && r.lastActivity !== p.lastActivity) {
-      const what = r.evidence.recent ? `파일 변경 (${r.evidence.recent})` : (r.evidence.release || '저장소 활동');
-      changes.push({ at: now, text: `${r.name}: ${what}` });
+  if (prev) {
+    for (const r of result) {
+      const p = prev[r.id];
+      if (!p) continue;
+      if (p.status !== r.status) changes.push({ at: now, text: `${r.name}: 상태 ${p.status} → ${r.status}` });
+      if (r.evidence.drive && p.drive && r.evidence.drive > p.drive)
+        changes.push({ at: now, text: `${r.name}: 파일 변경 (${r.evidence.recent})` });
+      if (r.evidence.pushedAt && p.gh && Math.max(r.evidence.pushedAt, r.evidence.releaseAt) > p.gh)
+        changes.push({ at: now, text: `${r.name}: GitHub ${r.evidence.release && r.evidence.releaseAt > r.evidence.pushedAt ? '릴리스 ' + r.evidence.release : '푸시'}` });
     }
   }
-  const snapshot = { apps: Object.fromEntries(result.map((r) => [r.id, { status: r.status, lastActivity: r.lastActivity }])) };
-  return { apps: result, newChanges: changes, snapshot, collectedAt: now };
+  const snapshot = { v: 2, apps: Object.fromEntries(result.map((r) => [r.id, {
+    status: r.status, drive: r.evidence.drive || 0,
+    gh: Math.max(r.evidence.pushedAt || 0, r.evidence.releaseAt || 0),
+  }])) };
+  return { apps: result, newChanges: changes, snapshot, collectedAt: now, baseline: !prev };
 }
 
 module.exports = { collect };
