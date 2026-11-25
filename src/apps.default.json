@@ -1,15 +1,132 @@
 [
-  {"id":"kkm","name":"끝말잇기 (KKM)","platform":"Android","status":"green","folder":"끝말잇기","repo":"","note":"FIX-13 완료, 사용자 정상작동 확인. Play 스토어 미등록.","next":"Play 개발자 계정 → 서명 AAB → 비공개 테스트"},
-  {"id":"ccc","name":"CarCareCost","platform":"Web","status":"green","folder":"","repo":"jmtailor/expense-tracker-auto","note":"carcarecost.com 운영 중, R21 검증 마감.","next":"F-06/F-10/F-11 잔여 검증, SNS 첫 게시"},
-  {"id":"eqlab-android","name":"EQ-LAB Android","platform":"Android","status":"green","folder":"EQ-LAB/02_Android","repo":"jmtailor/EQ-LAB","note":"최신 릴리스 build-11. build-10/11 실기기 확인 기록 없음.","next":"build-10/11 실기기 확인"},
-  {"id":"eqlab-win","name":"EQ-LAB Windows","platform":"Windows","status":"yellow","folder":"EQ-LAB/01_Windows","repo":"jmtailor/EQ-LAB","note":"최신 릴리스 win-5. 실사용 확인 기록 없음.","next":"win-5 실사용 확인"},
-  {"id":"worship","name":"워십밴드연습툴","platform":"PWA","status":"yellow","folder":"워십밴드연습툴","repo":"jmtailor/together_wing","note":"P0~P2 완료, GitHub Pages 시험판. P3·P4 미착수.","next":"P3 커서 동기화·구간 반복"},
-  {"id":"kids-ai","name":"자녀교육용 AI앱","platform":"Web/태블릿","status":"red","folder":"자녀교육용AI앱","repo":"","note":"프로토타입만 있고 실제 코드 없음.","next":"프로토타입 점검 → Supabase 환경"},
-  {"id":"slowmail","name":"Slow Mailling","platform":"-","status":"red","folder":"Slow Mailling","repo":"","note":"폴더만 있고 파일 없음.","next":"기획 시작 여부 결정"},
-  {"id":"storybook","name":"동화책제작툴","platform":"-","status":"red","folder":"동화책제작툴","repo":"","note":"폴더만 있고 파일 없음.","next":"기획 시작 여부 결정"},
-  {"id":"fishing","name":"초보낚시앱","platform":"-","status":"purple","folder":"초보낚시앱","repo":"","note":"motiv·기획 초안만 존재.","next":"수동 안내서로 수요 검증"},
-  {"id":"rental","name":"렌탈 비교 서비스","platform":"Web","status":"purple","folder":"","repo":"","note":"motiv·경쟁조사만 존재.","next":"수동 비교표 검증"},
-  {"id":"carbuy","name":"차량구입 비교 서비스","platform":"Web","status":"purple","folder":"","repo":"","note":"motiv·경쟁조사만 존재.","next":"차별점 검증 후 개발 여부 결정"},
-  {"id":"melody","name":"Melody Sketch","platform":"Web","status":"purple","folder":"Melody_Sketch","repo":"","note":"아이디어 초안만 존재.","next":"Basic Pitch PoC"},
-  {"id":"ideabank","name":"IDEA BANK 설문","platform":"설문","status":"purple","folder":"아이디어뱅크","repo":"","note":"앱이 아닌 시장검증 설문.","next":"마감 후 TEST 제외 집계"}
+ {
+  "id": "kkm",
+  "name": "끝말잇기 (KKM)",
+  "platform": "Android",
+  "status": "green",
+  "folder": "끝말잇기",
+  "repo": "",
+  "note": "FIX-13 완료, 사용자 정상작동 확인. Play 스토어 미등록.",
+  "next": "Play 개발자 계정 → 서명 AAB → 비공개 테스트"
+ },
+ {
+  "id": "ccc",
+  "name": "CarCareCost",
+  "platform": "Web",
+  "status": "green",
+  "folder": "G:\\내 드라이브\\자동차유지비 프로젝트 백업\\버전별_백업",
+  "repo": "jmtailor/expense-tracker-auto",
+  "note": "carcarecost.com 운영 중, R21 검증 마감.",
+  "next": "F-06/F-10/F-11 잔여 검증, SNS 첫 게시"
+ },
+ {
+  "id": "eqlab-android",
+  "name": "EQ-LAB Android",
+  "platform": "Android",
+  "status": "green",
+  "folder": "EQ-LAB/02_Android",
+  "repo": "jmtailor/EQ-LAB",
+  "note": "최신 릴리스 build-11. build-10/11 실기기 확인 기록 없음.",
+  "next": "build-10/11 실기기 확인"
+ },
+ {
+  "id": "eqlab-win",
+  "name": "EQ-LAB Windows",
+  "platform": "Windows",
+  "status": "yellow",
+  "folder": "EQ-LAB/01_Windows",
+  "repo": "jmtailor/EQ-LAB",
+  "note": "최신 릴리스 win-5. 실사용 확인 기록 없음.",
+  "next": "win-5 실사용 확인"
+ },
+ {
+  "id": "worship",
+  "name": "워십밴드연습툴",
+  "platform": "PWA",
+  "status": "yellow",
+  "folder": "워십밴드연습툴",
+  "repo": "jmtailor/together_wing",
+  "note": "P0~P2 완료, GitHub Pages 시험판. P3·P4 미착수.",
+  "next": "P3 커서 동기화·구간 반복"
+ },
+ {
+  "id": "kids-ai",
+  "name": "자녀교육용 AI앱",
+  "platform": "Web/태블릿",
+  "status": "red",
+  "folder": "자녀교육용AI앱",
+  "repo": "",
+  "note": "프로토타입만 있고 실제 코드 없음.",
+  "next": "프로토타입 점검 → Supabase 환경"
+ },
+ {
+  "id": "slowmail",
+  "name": "Slow Mailling",
+  "platform": "-",
+  "status": "red",
+  "folder": "Slow Mailling",
+  "repo": "",
+  "note": "폴더만 있고 파일 없음.",
+  "next": "기획 시작 여부 결정"
+ },
+ {
+  "id": "storybook",
+  "name": "동화책제작툴",
+  "platform": "-",
+  "status": "red",
+  "folder": "동화책제작툴",
+  "repo": "",
+  "note": "폴더만 있고 파일 없음.",
+  "next": "기획 시작 여부 결정"
+ },
+ {
+  "id": "fishing",
+  "name": "초보낚시앱",
+  "platform": "-",
+  "status": "purple",
+  "folder": "초보낚시앱",
+  "repo": "",
+  "note": "motiv·기획 초안만 존재.",
+  "next": "수동 안내서로 수요 검증"
+ },
+ {
+  "id": "rental",
+  "name": "렌탈 비교 서비스",
+  "platform": "Web",
+  "status": "purple",
+  "folder": "렌탈비교서비스",
+  "repo": "",
+  "note": "motiv·경쟁조사만 존재.",
+  "next": "수동 비교표 검증"
+ },
+ {
+  "id": "carbuy",
+  "name": "차량구입 비교 서비스",
+  "platform": "Web",
+  "status": "purple",
+  "folder": "차량구입비교서비스",
+  "repo": "",
+  "note": "motiv·경쟁조사만 존재.",
+  "next": "차별점 검증 후 개발 여부 결정"
+ },
+ {
+  "id": "melody",
+  "name": "Melody Sketch",
+  "platform": "Web",
+  "status": "purple",
+  "folder": "Melody_Sketch",
+  "repo": "",
+  "note": "아이디어 초안만 존재.",
+  "next": "Basic Pitch PoC"
+ },
+ {
+  "id": "ideabank",
+  "name": "IDEA BANK 설문",
+  "platform": "설문",
+  "status": "purple",
+  "folder": "아이디어뱅크",
+  "repo": "",
+  "note": "앱이 아닌 시장검증 설문.",
+  "next": "마감 후 TEST 제외 집계"
+ }
 ]

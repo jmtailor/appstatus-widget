@@ -57,8 +57,8 @@ async function collect(apps, settings, prevSnapshot) {
   const result = [];
   for (const a of apps) {
     const ev = { folderFound: false, files: 0, newest: 0, recent: '', names: [], repo: null };
-    if (root && a.folder) {
-      const dir = path.join(root, a.folder);
+    if (a.folder && (root || path.isAbsolute(a.folder))) {
+      const dir = path.isAbsolute(a.folder) ? a.folder : path.join(root, a.folder);
       if (fs.existsSync(dir)) {
         ev.folderFound = true;
         const s = scanFolder(dir);

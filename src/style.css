@@ -25,3 +25,7 @@ section{min-height:0;display:flex;flex-direction:column}
 #panel input[type=text],#panel input[type=password],#panel input[type=number],#panel select{width:100%;background:#0e1318;color:#e6edf3;border:1px solid #2a3541;border-radius:6px;padding:4px 6px;margin-top:3px;font:inherit}
 #panel input[type=range]{width:100%}.ck{display:flex;gap:6px;align-items:center}.row{display:flex;gap:6px}.row input{flex:1}
 output{float:right;color:#e6edf3}
+
+.mini{display:none;margin-right:8px;align-self:center;white-space:nowrap}.mini i{display:inline-block;width:8px;height:8px;border-radius:50%;margin:0 3px 0 8px}
+body.col main,body.col #panel{display:none}body.col .mini{display:inline-block}body.col header{padding:8px 10px}
+.btns{align-items:center}

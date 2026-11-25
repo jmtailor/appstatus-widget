@@ -7,7 +7,7 @@ if (!app.requestSingleInstanceLock()) app.quit();
 
 const DEFAULTS = {
   corner: 'top-right', opacity: 0.92, alwaysOnTop: true, clickThrough: false,
-  driveRoot: '', githubToken: '', autostart: false, intervalMin: 10, width: 700, height: 440,
+  driveRoot: '', githubToken: '', autostart: false, intervalMin: 10, width: 700, height: 440, collapsed: false,
 };
 const userDir = () => app.getPath('userData');
 const fp = (n) => path.join(userDir(), n);
@@ -15,7 +15,7 @@ const readJson = (f, d) => { try { return JSON.parse(fs.readFileSync(f, 'utf8'))
 const writeJson = (f, o) => fs.writeFileSync(f, JSON.stringify(o, null, 2));
 
 let settings, apps, state = { apps: [], changes: [], collectedAt: 0, busy: false };
-let win, tray, timer, watcher, debounce;
+let win, tray, timer, watchers = [], debounce;
 
 function guessDriveRoot() {
   const home = app.getPath('home');
@@ -32,7 +32,7 @@ function guessDriveRoot() {
 function place() {
   if (!win) return;
   const wa = screen.getPrimaryDisplay().workArea;
-  const w = settings.width, h = settings.height, m = 12;
+  const w = settings.width, h = settings.collapsed ? 46 : settings.height, m = 12;
   const right = settings.corner.endsWith('right'), bottom = settings.corner.startsWith('bottom');
   win.setBounds({ x: right ? wa.x + wa.width - w - m : wa.x + m, y: bottom ? wa.y + wa.height - h - m : wa.y + m, width: w, height: h });
 }
@@ -42,7 +42,8 @@ function applySettings() {
   win.setOpacity(Math.min(1, Math.max(0.2, settings.opacity)));
   win.setAlwaysOnTop(!!settings.alwaysOnTop, 'floating');
   win.setIgnoreMouseEvents(!!settings.clickThrough, { forward: true });
-  app.setLoginItemSettings({ openAtLogin: !!settings.autostart });
+  if (app.isPackaged) app.setLoginItemSettings({ openAtLogin: !!settings.autostart });
+  else app.setLoginItemSettings({ openAtLogin: !!settings.autostart, path: process.execPath, args: [app.getAppPath()] });
   place();
   buildTrayMenu();
 }
@@ -65,13 +66,15 @@ async function refresh() {
 }
 
 function startWatch() {
-  if (watcher) { watcher.close(); watcher = null; }
-  if (!settings.driveRoot || !fs.existsSync(settings.driveRoot)) return;
-  try {
-    watcher = fs.watch(settings.driveRoot, { recursive: true }, () => {
-      clearTimeout(debounce); debounce = setTimeout(refresh, 4000);
-    });
-  } catch {}
+  watchers.forEach((w) => { try { w.close(); } catch {} });
+  watchers = [];
+  const dirs = new Set();
+  if (settings.driveRoot) dirs.add(settings.driveRoot);
+  apps.forEach((a) => { if (a.folder && path.isAbsolute(a.folder)) dirs.add(a.folder); });
+  for (const d of dirs) {
+    if (!fs.existsSync(d)) continue;
+    try { watchers.push(fs.watch(d, { recursive: true }, () => { clearTimeout(debounce); debounce = setTimeout(refresh, 4000); })); } catch {}
+  }
 }
 
 function schedule() {
@@ -79,12 +82,14 @@ function schedule() {
   timer = setInterval(refresh, Math.max(2, settings.intervalMin) * 60000);
 }
 
+function toggleCollapse() { settings.collapsed = !settings.collapsed; writeJson(fp('settings.json'), settings); place(); push(); buildTrayMenu(); }
 function setCorner(c) { settings.corner = c; writeJson(fp('settings.json'), settings); applySettings(); push(); }
 function buildTrayMenu() {
   if (!tray) return;
   const corners = [['top-right', '우측 상단'], ['bottom-right', '우측 하단'], ['top-left', '좌측 상단'], ['bottom-left', '좌측 하단']];
   tray.setContextMenu(Menu.buildFromTemplate([
     { label: '위젯 보이기/숨기기', click: () => (win.isVisible() ? win.hide() : win.show()) },
+    { label: settings.collapsed ? '펼치기' : '접기(최소화)', click: toggleCollapse },
     { label: '지금 새로고침', click: refresh },
     { type: 'separator' },
     ...corners.map(([v, l]) => ({ label: l, type: 'radio', checked: settings.corner === v, click: () => setCorner(v) })),
@@ -113,6 +118,14 @@ app.whenReady().then(() => {
   if (!settings.driveRoot) settings.driveRoot = guessDriveRoot();
   if (!fs.existsSync(fp('apps.json'))) fs.copyFileSync(path.join(__dirname, 'apps.default.json'), fp('apps.json'));
   apps = readJson(fp('apps.json'), []);
+  const defs = readJson(path.join(__dirname, 'apps.default.json'), []);
+  for (const d of defs) {
+    const u = apps.find((x) => x.id === d.id);
+    if (!u) apps.push(d);
+    else { if (!u.folder && d.folder) u.folder = d.folder; if (!u.repo && d.repo) u.repo = d.repo; }
+  }
+  writeJson(fp('apps.json'), apps);
+  if (!settings.autostartInit) { settings.autostart = true; settings.autostartInit = true; }
   writeJson(fp('settings.json'), settings);
 
   tray = new Tray(nativeImage.createFromPath(path.join(__dirname, '..', 'assets', 'tray.png')));
@@ -134,10 +147,11 @@ ipcMain.handle('set-settings', (_e, patch) => {
   push();
 });
 ipcMain.handle('refresh', refresh);
-ipcMain.handle('reload-apps', () => { apps = readJson(fp('apps.json'), apps); return refresh(); });
+ipcMain.handle('reload-apps', () => { apps = readJson(fp('apps.json'), apps); startWatch(); return refresh(); });
 ipcMain.handle('open-apps-file', () => shell.openPath(fp('apps.json')));
 ipcMain.handle('pick-folder', async () => {
   const r = await dialog.showOpenDialog(win, { properties: ['openDirectory'], title: 'Create APP 폴더 선택' });
   return r.canceled ? null : r.filePaths[0];
 });
 ipcMain.handle('hide', () => win.hide());
+ipcMain.handle('toggle-collapse', toggleCollapse);

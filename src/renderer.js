@@ -53,6 +53,10 @@ function render() {
   S.changes.forEach((c) => ul.appendChild(el('li', '', `${new Date(c.at).toLocaleDateString('ko-KR', { month: 'numeric', day: 'numeric' })} ${c.text}`)));
 
   const st = S.settings;
+  document.body.classList.toggle('col', !!st.collapsed);
+  $('bMin').textContent = st.collapsed ? '▢' : '─';
+  const mini = $('mini'); mini.textContent = '';
+  order.forEach((k) => { const i = el('i'); i.style.background = C[k]; mini.appendChild(i); mini.appendChild(document.createTextNode(String(cnt[k]))); });
   if (document.activeElement !== $('op')) { $('op').value = Math.round(st.opacity * 100); $('opv').textContent = Math.round(st.opacity * 100) + '%'; }
   $('corner').value = st.corner; $('top').checked = !!st.alwaysOnTop; $('auto').checked = !!st.autostart;
   if (document.activeElement !== $('root')) $('root').value = st.driveRoot || '';
@@ -60,6 +64,7 @@ function render() {
 }
 
 $('bRef').onclick = () => api.refresh();
+$('bMin').onclick = () => api.toggleCollapse();
 $('bHide').onclick = () => api.hide();
 $('bSet').onclick = () => { $('panel').hidden = !$('panel').hidden; };
 $('close').onclick = () => { $('panel').hidden = true; };

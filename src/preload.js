@@ -6,6 +6,7 @@ contextBridge.exposeInMainWorld('api', {
   reloadApps: () => ipcRenderer.invoke('reload-apps'),
   openAppsFile: () => ipcRenderer.invoke('open-apps-file'),
   pickFolder: () => ipcRenderer.invoke('pick-folder'),
+  toggleCollapse: () => ipcRenderer.invoke('toggle-collapse'),
   hide: () => ipcRenderer.invoke('hide'),
   onState: (cb) => ipcRenderer.on('state', (_e, s) => cb(s)),
 });
